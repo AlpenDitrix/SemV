@@ -1,12 +1,12 @@
 package de.vogella.algorithms.sort.quicksort;
 
-import java.util.Map.Entry;
 
 /**
  * 
- * Refactored for using with {@link java.util.Map.Entry}
+ * Slightly modified typical q-sort
  * 
  * @author Lars Vogel
+ * @author Alpen Ditrix
  * 
  */
 public class Quicksort {

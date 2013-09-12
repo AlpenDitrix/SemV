@@ -6,58 +6,51 @@ import de.vogella.algorithms.sort.quicksort.Quicksort;
 /**
  * Automated Teller Machine
  * 
- * @author Alpen
+ * @author Alpen Ditrix
  * 
  */
 public class ATM {
 
-	private final int[] availableCoinValues;
+	private final int[] availableCoinWorth;
 
-	public ATM(int[] values) {
-		availableCoinValues = values;
+	public ATM(int[] worths) {
+		availableCoinWorth = worths;
 		// descending sorting => highest is first, lowest is last
-		Quicksort.sort(availableCoinValues, false);
+		Quicksort.sort(availableCoinWorth, false);
 	}
 
 	public ListOfCases exchange(int moneyToExchange) {
 		if (moneyToExchange < 1) {
 			return ListOfCases.WORNG_INPUT;
 		}
-
-		return computeVariants(moneyToExchange);
+		return computeCases(moneyToExchange);
 	}
 
-	private ListOfCases computeVariants(int given) {
+	private ListOfCases computeCases(int given) {
 		ListOfCases cases = new ListOfCases();
-		for (int i = 0; i < availableCoinValues.length; i++) {
-			computeVariants0(given, i, new Case(), cases);
+		for (int i = 0; i < availableCoinWorth.length; i++) {
+			computeCases0(given, i, new Case(), cases);
 		}
 		return cases;
 	}
 
-	private void computeVariants0(int given, int i, Case c, ListOfCases cases) {
-
-		if (given >= availableCoinValues[i]) {
-			// store value
-			c.incrementCoin(availableCoinValues[i]);
+	private void computeCases0(int given, int i, Case c, ListOfCases cases) {
+		if (given >= availableCoinWorth[i]) {
+			c.incrementCoin(availableCoinWorth[i]);
 		} else {
-			if (given == 0 && i == availableCoinValues.length-1) {
+			if (given == 0 && i == availableCoinWorth.length-1) {
 				cases.add(c);
 			}
 			return;
 		}
 
-		for (int j = 0; j + i < availableCoinValues.length; j++) {
-			computeVariants0(given - availableCoinValues[i], i + j, new Case(c), cases);
+		for (int j = 0; j + i < availableCoinWorth.length; j++) {
+			computeCases0(given - availableCoinWorth[i], i + j, new Case(c), cases);
 		}
-
-		// if (given == 0 && c.size() > 0) {
-		// cases.add(c);
-		// }
 	}
 
 	public String toString() {
-		return Arrays.toString(availableCoinValues);
+		return Arrays.toString(availableCoinWorth);
 	}
 
 }
