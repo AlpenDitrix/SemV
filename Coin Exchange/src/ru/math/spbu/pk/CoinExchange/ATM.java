@@ -31,15 +31,15 @@ public class ATM {
 	}
 
 	/**
-	 * Set your custom available worths.
-	 * Also this constructor will remove all duplicated worths
+	 * Set your custom available worths. Also this constructor will remove all
+	 * duplicated worths
 	 * 
 	 * @param worths
 	 *            array of worths of coins, which you want to use
 	 */
 	public ATM(int[] worths) {
 		if (worths.length < 1) {
-			throw new RuntimeException("You must use at least one coin");
+			throw new RuntimeException(Messages.getString("noCoins")); //$NON-NLS-1$
 		}
 
 		// checkForDuplicates
@@ -71,7 +71,9 @@ public class ATM {
 	}
 
 	/**
-	 * That method starts support-service and sets running-flag. Also it may return {@link ListOfCases#WRONG_INPUT} for wrong money amount
+	 * That method starts support-service and sets running-flag. Also it may
+	 * return {@link ListOfCases#WRONG_INPUT} for wrong money amount
+	 * 
 	 * @param moneyToExchange
 	 *            how much to exchange
 	 * @return list of options "how to exchange"
@@ -89,9 +91,12 @@ public class ATM {
 	}
 
 	/**
-	 * This method creates storage structure, marks timedout case-lists and cares about {@link StackOverflowError}.
-	 * Also here will be set off the flag "running"
-	 * @param given how much money was given to ATM
+	 * This method creates storage structure, marks timedout case-lists and
+	 * cares about {@link StackOverflowError}. Also here will be set off the
+	 * flag "running"
+	 * 
+	 * @param given
+	 *            how much money was given to ATM
 	 * @return list of options "how to exchange"
 	 */
 	private ListOfCases computeCases(int given) {
@@ -111,9 +116,9 @@ public class ATM {
 				}
 			}
 		} catch (StackOverflowError e) {
-			System.err.println("Oops. I've got stack owerflow.");
+			System.err.println(Messages.getString("stackOverflow")); //$NON-NLS-1$
 		} catch (Exception e) {
-			System.err.println("Oops. Something gone wrong.");
+			System.err.println(Messages.getString("SmthIsWrong")); //$NON-NLS-1$
 		}
 		running = false;
 		return cases;
@@ -149,7 +154,7 @@ public class ATM {
 					// I have no more coins to exchange money. E.g. you can't
 					// exchange 3$ using only 2$ coins
 					throw new RuntimeException(
-							"This ATM can not exchange this money");
+							Messages.getString("notEnoughCoins")); //$NON-NLS-1$
 				}
 				cases.add(c);
 			}
@@ -177,12 +182,13 @@ public class ATM {
 	}
 
 	/**
-	 * @param UID unique calculation ID
+	 * @param UID
+	 *            unique calculation ID
 	 * @return if it is specified calculation and if it's running
 	 */
 	public boolean isRunning(long UID) {
 		synchronized (this) {
-//			System.out.println("Checked");
+			// System.out.println("Checked");
 			return running && UID == currentUID;
 		}
 	}
@@ -192,7 +198,7 @@ public class ATM {
 	 */
 	public boolean isRunning() {
 		synchronized (this) {
-//			System.out.println("isRunning");
+			// System.out.println("isRunning");
 			return running;
 		}
 	}
@@ -211,27 +217,28 @@ public class ATM {
 
 	/**
 	 * Computation will stop on next reaching if(running) marker
-	 * @param UID Id of calculatioin to stop
+	 * 
+	 * @param UID
+	 *            Id of calculatioin to stop
 	 * @return if termination was successful
 	 */
 	public boolean askToTerminateComputation(long UID) {
 		synchronized (this) {
-//			System.out.println("Entered");
+			// System.out.println("Entered");
 			if (isRunning(UID)) {
-//				System.out.println("Came through");
-				System.err
-						.println("The calculation has been going on for too long. Are you sure you want to continue? (Enter y\n for \"yes I want\"\\\"no, I don't want\"");
+				// System.out.println("Came through");
+				System.err.println(Messages.getString("timeout")); //$NON-NLS-1$
 				boolean gotIt = false;
 				while (!gotIt) {
 					try {
 						String s = new BufferedReader(new InputStreamReader(
 								System.in)).readLine();
-						if (s.toLowerCase().equals("y")
-								|| s.toLowerCase().equals("ó")) {
+						if (s.toLowerCase().equals("y") //$NON-NLS-1$
+								|| s.toLowerCase().equals("ó")) { //$NON-NLS-1$
 							// let's stop it
 							running = false;
 							gotIt = true;
-						} else if (s.toLowerCase().equals("n")) {
+						} else if (s.toLowerCase().equals("n")) { //$NON-NLS-1$
 							// kk. Just go on
 							gotIt = true;
 						}
@@ -242,6 +249,6 @@ public class ATM {
 			}
 		}
 		return !running;
-//		System.out.println("Waiter got answer and exited from sync-block");
+		// System.out.println("Waiter got answer and exited from sync-block");
 	}
 }

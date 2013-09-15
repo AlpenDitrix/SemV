@@ -11,39 +11,40 @@ import ru.math.spbu.pk.CoinExchange.ATM;
 public class Test {
 
 	/**
-	 * Instance of input-helper 
+	 * Instance of input-helper
 	 */
 	static Parser p = new Parser();
 
 	public static void main(String[] s) throws IOException {
-		//1)SET UP THE ATM
+		// 1)SET UP THE ATM
 		ATM atm = new ATM(readWorths());
-		//2)WORK WITH HIM
+		// 2)WORK WITH HIM
 		while (true) {
 			try {
 				System.err.println(atm.exchange(readMoney()));
 			} catch (NumberFormatException e) {
 				System.err
-						.println("Please, use only digits. I can't understand what do you mean");
+						.println(Messages.getString("PleaseDigits"));
 			}
 		}
 	}
 
 	private static int readMoney() throws IOException {
 		try {
-			//I need this to show messages from differet streams (System.in and System.err) in a proper order
+			// I need this to show messages from differet streams (System.in and
+			// System.err) in a proper order
 			Thread.sleep(15);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		System.out
-				.println("\nEnter how much money do you want to exchange\nEnter any non-number string to exit");
+				.println(Messages.getString("EnterMoney"));
 		return p.nextInteger();
 	}
 
 	private static int[] readWorths() throws IOException {
 		System.out
-				.println("Enter which worhts must be available in your ATM\nUse \" \\t\\n\\r\\f\" as delimeters and end input with '.' (dot)\nOr type just a dot to use default (1 3 5 10)");
+				.println(Messages.getString("EnterWorths"));
 		List<Integer> list = new ArrayList<>();
 		String s = p.nextString();
 		while (true) {
@@ -62,19 +63,19 @@ public class Test {
 				list.add(Integer.parseInt(s));
 			} catch (NumberFormatException e) {
 				System.err
-						.println("Please, use only digits, delimeters or dot as input. I can't understand what do you mean");
+						.println(Messages.getString("PleaseDigitsEtc"));
 			}
 			s = p.nextString();
 		}
 
-		//may be made better, but so will do
+		// may be made better, but so will do
 		if (list.size() < 1) {
 			int[] v = { 1, 3, 5, 10 };
-			System.out.println("\nGood. You've  chosen that worths: "
+			System.out.println(Messages.getString("Good")
 					.concat(Arrays.toString(v)));
 			return v;
 		} else {
-			System.out.println("\nGood. You've  chosen that worths: "
+			System.out.println(Messages.getString("Good")
 					.concat(list.toString()));
 			int[] v = new int[list.size()];
 			for (int i = 0; i < v.length; i++) {

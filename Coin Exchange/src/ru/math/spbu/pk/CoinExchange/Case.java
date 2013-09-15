@@ -63,12 +63,7 @@ public class Case extends HashMap<Integer, Integer> {
 		if (size() > 0) {
 			StringBuilder sb = new StringBuilder();
 			for (Map.Entry<Integer, Integer> e : this.entrySet()) {
-				sb.append('\'');
-				sb.append(e.getKey());
-				sb.append('\'');
-				sb.append(" x ");
-				sb.append(e.getValue());
-				sb.append("\n");
+				sb.append(String.format("\'%s\' x %s\n", e.getKey(), e.getValue()));
 			}
 			return sb.toString();
 		} else {

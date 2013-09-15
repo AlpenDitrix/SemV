@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Just {@link ArrayList} of {@link Case}s with some environment
  * 
- * @author Alpen
+ * @author Alpen Ditrix
  * 
  */
 public class ListOfCases extends ArrayList<Case> {
@@ -26,7 +26,7 @@ public class ListOfCases extends ArrayList<Case> {
 
 		public String toString() {
 			bad();
-			return "Your money is fake";
+			return Messages.getString("ListOfCases.fakeMoney");
 		}
 
 	};
@@ -46,34 +46,26 @@ public class ListOfCases extends ArrayList<Case> {
 
 	public String toString() {
 		if (size() == 0) {
-			return "[Feel free to take my nothing]";
+			return Messages.getString("ListOfCases.noCases");
 		}
 		if (size() > 0) {
 			StringBuilder sb = new StringBuilder();
 			if (timedOut) {
-				sb.append("\nCOMPUTATIOIN OF THIS REQUEST TIMED OUT\n");
+				sb.append(Messages.getString("ListOfCases.timeout"));
 			}
-			sb.append("[Here is ");
-			sb.append(size());
-			if (size() > 1) {
-				sb.append(" cases:]");
-			} else {
-				sb.append(" case:]");
-			}
-			// sb.append(String.format(" case%s:", size() > 1 ? "s" : ""));
+			sb.append(String.format(Messages.getString("ListOfCases.hereIs"),
+					Integer.toString(size()), size() > 1 ? "s" : "")); 
 			for (Case c : this) {
-				sb.append('\n');
-				sb.append("_______");
-				sb.append('\n');
+				sb.append("\n_______\n");
 				sb.append(c.toString());
 			}
 			if (timedOut) {
-				sb.append("\nCOMPUTATIOIN OF THIS REQUEST TIMED OUT\n");
+				sb.append(Messages.getString("ListOfCases.timeout"));
 			}
 			return sb.toString();
 
 		} else {
-			return "Unfortunately this ATM can not exchange that money";
+			return Messages.getString("ListOfCases.failedExchange");
 		}
 	}
 
@@ -94,15 +86,14 @@ public class ListOfCases extends ArrayList<Case> {
 		checkCounters();
 	}
 
-
 	@SuppressWarnings("javadoc")
 	private static void checkCounters() {
 		if (timedOutCounter == 3) {
-			System.err.println("Please, buy newer PC");
+			System.err.println(Messages.getString("ListOfCases.tooSlow"));
 		}
 		if (badCounter == 3) {
 			System.err
-					.println("You're not enough tricky. I'm going to call the police");
+					.println(Messages.getString("ListOfCases.nigga"));
 		}
 	}
 
