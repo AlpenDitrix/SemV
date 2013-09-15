@@ -199,8 +199,9 @@ public class ATM {
 
 	/**
 	 * Computation will stop on next reaching if(running) marker
+	 * @return 
 	 */
-	public void askToStopComputation(long UID) {
+	public boolean askToTerminateComputation(long UID) {
 		synchronized (this) {
 			if (UID == currentUID) {
 				System.err
@@ -225,6 +226,7 @@ public class ATM {
 				}
 			}
 		}
+		return !running;
 //		System.out.println("Waiter got answer and exited from sync-block");
 	}
 }
