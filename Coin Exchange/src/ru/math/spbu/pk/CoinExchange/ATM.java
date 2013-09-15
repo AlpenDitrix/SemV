@@ -10,13 +10,16 @@ import java.util.Random;
 import de.vogella.algorithms.sort.quicksort.Quicksort;
 
 /**
- * Automated Teller Machine
+ * Automated Teller Machine for money exchange
  * 
  * @author Alpen Ditrix
  * 
  */
 public class ATM {
 
+	/**
+	 * Worths of coins, which may be given to user
+	 */
 	private final int[] availableCoinWorth;
 
 	/**
@@ -28,7 +31,8 @@ public class ATM {
 	}
 
 	/**
-	 * Set your custom available worths
+	 * Set your custom available worths.
+	 * Also this constructor will remove all duplicated worths
 	 * 
 	 * @param worths
 	 *            array of worths of coins, which you want to use
@@ -67,7 +71,7 @@ public class ATM {
 	}
 
 	/**
-	 * 
+	 * That method starts support-service and sets running-flag. Also it may return {@link ListOfCases#WRONG_INPUT} for wrong money amount
 	 * @param moneyToExchange
 	 *            how much to exchange
 	 * @return list of options "how to exchange"
@@ -85,9 +89,9 @@ public class ATM {
 	}
 
 	/**
-	 * 
-	 * @param moneyToExchange
-	 *            how much to exchange
+	 * This method creates storage structure, marks timedout case-lists and cares about {@link StackOverflowError}.
+	 * Also here will be set off the flag "running"
+	 * @param given how much money was given to ATM
 	 * @return list of options "how to exchange"
 	 */
 	private ListOfCases computeCases(int given) {
@@ -172,12 +176,20 @@ public class ATM {
 		return Arrays.toString(availableCoinWorth);
 	}
 
+	/**
+	 * @param UID unique calculation ID
+	 * @return if it is specified calculation and if it's running
+	 */
 	public boolean isRunning(long UID) {
 		synchronized (this) {
+//			System.out.println("Checked");
 			return running && UID == currentUID;
 		}
 	}
 
+	/**
+	 * @return if that calculation is running
+	 */
 	public boolean isRunning() {
 		synchronized (this) {
 //			System.out.println("isRunning");
@@ -187,7 +199,7 @@ public class ATM {
 
 	/**
 	 * Figures out is some computation may be running, or it's need to be
-	 * stopped beacos of some
+	 * terminated becouse of something
 	 */
 	private boolean running;
 
@@ -199,11 +211,14 @@ public class ATM {
 
 	/**
 	 * Computation will stop on next reaching if(running) marker
-	 * @return 
+	 * @param UID Id of calculatioin to stop
+	 * @return if termination was successful
 	 */
 	public boolean askToTerminateComputation(long UID) {
 		synchronized (this) {
-			if (UID == currentUID) {
+//			System.out.println("Entered");
+			if (isRunning(UID)) {
+//				System.out.println("Came through");
 				System.err
 						.println("The calculation has been going on for too long. Are you sure you want to continue? (Enter y\n for \"yes I want\"\\\"no, I don't want\"");
 				boolean gotIt = false;

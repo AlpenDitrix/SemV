@@ -7,15 +7,17 @@ import java.util.List;
 
 import ru.math.spbu.pk.CoinExchange.ATM;
 
+@SuppressWarnings("javadoc")
 public class Test {
 
+	/**
+	 * Instance of input-helper 
+	 */
 	static Parser p = new Parser();
 
 	public static void main(String[] s) throws IOException {
-		
 		//1)SET UP THE ATM
 		ATM atm = new ATM(readWorths());
-		
 		//2)WORK WITH HIM
 		while (true) {
 			try {
@@ -29,6 +31,7 @@ public class Test {
 
 	private static int readMoney() throws IOException {
 		try {
+			//I need this to show messages from differet streams (System.in and System.err) in a proper order
 			Thread.sleep(15);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -46,7 +49,6 @@ public class Test {
 		while (true) {
 			try {
 				if (s.contains(".")) {
-
 					s = s.replace(".", "");
 					if (!s.equals("")) {
 						// There must not be duplicates of usable coins
@@ -65,6 +67,7 @@ public class Test {
 			s = p.nextString();
 		}
 
+		//may be made better, but so will do
 		if (list.size() < 1) {
 			int[] v = { 1, 3, 5, 10 };
 			System.out.println("\nGood. You've  chosen that worths: "

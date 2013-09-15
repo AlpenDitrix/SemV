@@ -2,6 +2,12 @@ package ru.math.spbu.pk.CoinExchange;
 
 import java.util.ArrayList;
 
+/**
+ * Just {@link ArrayList} of {@link Case}s with some environment
+ * 
+ * @author Alpen
+ * 
+ */
 public class ListOfCases extends ArrayList<Case> {
 
 	/**
@@ -9,6 +15,9 @@ public class ListOfCases extends ArrayList<Case> {
 	 */
 	private static final long serialVersionUID = 8037932627088736022L;
 
+	/**
+	 * This instance will be returned if ATM got wrong input
+	 */
 	public static final ListOfCases WRONG_INPUT = new ListOfCases() {
 		/**
 		 * 
@@ -22,12 +31,21 @@ public class ListOfCases extends ArrayList<Case> {
 
 	};
 
+	/**
+	 * Shows "if that calculation was timed out, so this list isn't full"
+	 */
 	private boolean timedOut = false;
+	/**
+	 * Shows how much timedOuts were
+	 */
 	private static int timedOutCounter = 0;
+	/**
+	 * Show how much times someone used wrong input
+	 */
 	private static int badCounter = 0;
 
 	public String toString() {
-		if(size()== 0){
+		if (size() == 0) {
 			return "[Feel free to take my nothing]";
 		}
 		if (size() > 0) {
@@ -59,17 +77,25 @@ public class ListOfCases extends ArrayList<Case> {
 		}
 	}
 
+	/**
+	 * Sets flag and checks counter
+	 */
 	public void setTimedOut() {
 		timedOut = true;
 		timedOutCounter++;
 		checkCounters();
 	}
 
+	/**
+	 * Sets flag and check counter
+	 */
 	private static void bad() {
 		badCounter++;
 		checkCounters();
 	}
 
+
+	@SuppressWarnings("javadoc")
 	private static void checkCounters() {
 		if (timedOutCounter == 3) {
 			System.err.println("Please, buy newer PC");

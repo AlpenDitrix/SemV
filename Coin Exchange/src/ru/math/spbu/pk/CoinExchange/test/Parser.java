@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+@SuppressWarnings("javadoc")
 /**
+ * 
+ * Helper class allowing to read from console or file easily
  * 
  * @author Alpen Ditrix
  * 
@@ -17,11 +20,18 @@ class Parser {
 	BufferedReader br;
 	StringTokenizer st;
 
+	/**
+	 * Console-reader constructor
+	 */
 	public Parser() {
 		br = new BufferedReader(new InputStreamReader(System.in));
 		st = new StringTokenizer("");
 	}
 
+	/**
+	 * File-reader construcor
+	 * @param path path to file
+	 */
 	public Parser(String path) {
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(
