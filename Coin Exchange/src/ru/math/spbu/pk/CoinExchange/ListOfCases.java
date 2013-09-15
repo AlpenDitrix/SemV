@@ -28,19 +28,19 @@ public class ListOfCases extends ArrayList<Case> {
 
 	public String toString() {
 		if(size()== 0){
-			return "Feel free to take my nothing";
+			return "[Feel free to take my nothing]";
 		}
 		if (size() > 0) {
 			StringBuilder sb = new StringBuilder();
 			if (timedOut) {
 				sb.append("\nCOMPUTATIOIN OF THIS REQUEST TIMED OUT\n");
 			}
-			sb.append("Here is ");
+			sb.append("[Here is ");
 			sb.append(size());
 			if (size() > 1) {
-				sb.append(" cases:");
+				sb.append(" cases:]");
 			} else {
-				sb.append(" case:");
+				sb.append(" case:]");
 			}
 			// sb.append(String.format(" case%s:", size() > 1 ? "s" : ""));
 			for (Case c : this) {
