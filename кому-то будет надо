@@ -1,0 +1,31 @@
+Program moneta; {Рекурсивный более простой, но более медленный}
+{***MADe by ACiD***}
+Var n,q,j:integer; {вариант программы «размена монет»}
+    d,a:array[0..100] of byte;
+Procedure ff(k,l,m:integer);
+  var i:integer;
+begin
+    if k=0 then
+        begin
+        for i:=1 to m-1 do 
+            write(d[a[i]],' '); {печать полученного варианта раскладки}
+        writeln;
+        end
+    else
+        for i:=L to q do
+            if k>=d[i] then {исключение повторяющихся вариантов}
+                begin 
+                a[m]:=i; 
+                ff(k-d[i],i,m+1); {добавление в размен монетки d[I]}
+                end;
+end;
+
+BEGIN
+    write('kolvo monet:');
+    readln(q); {q-количество номиналов монет, d[1..q] номиналы}
+    for j:=1 to q do 
+        d[j]:=j; {монет, N-сумма для размена} 
+    n:=q;
+    a[0]:=255;
+    ff(n,1,1);
+END.
