@@ -23,8 +23,9 @@ public class Test {
 			try {
 				System.err.println(atm.exchange(readMoney()));
 			} catch (NumberFormatException e) {
-				System.err
-						.println(Messages.getString("PleaseDigits"));
+//				System.err.println(Messages.getString("PleaseDigits"));
+				return;
+				
 			}
 		}
 	}

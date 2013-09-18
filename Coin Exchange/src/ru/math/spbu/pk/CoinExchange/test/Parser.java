@@ -43,20 +43,9 @@ class Parser {
 		st = new StringTokenizer("");
 	}
 
-	String nextString() throws IOException {
-		while (!st.hasMoreTokens()) {
-			String s = br.readLine();
-			if (s != null)
-				st = new StringTokenizer(s);
-			else
-				return null;
-		}
-		return st.nextToken();
-	}
-
-	String nextLine() throws IOException {
-		st = new StringTokenizer("");
-		return br.readLine();
+	Double nextDouble() throws NumberFormatException, IOException {
+		String s = nextString();
+		return (s != null) ? Double.parseDouble(s) : null;
 	}
 
 	Integer nextInteger() throws NumberFormatException, IOException {
@@ -68,6 +57,11 @@ class Parser {
 		return (s != null) ? Integer.parseInt(s, radix) : null;
 	}
 
+	String nextLine() throws IOException {
+		st = new StringTokenizer("");
+		return br.readLine();
+	}
+
 	Long nextLong() throws NumberFormatException, IOException {
 		return nextLong(10);
 	}
@@ -77,8 +71,14 @@ class Parser {
 		return (s != null) ? Long.parseLong(s, radix) : null;
 	}
 
-	Double nextDouble() throws NumberFormatException, IOException {
-		String s = nextString();
-		return (s != null) ? Double.parseDouble(s) : null;
+	String nextString() throws IOException {
+		while (!st.hasMoreTokens()) {
+			String s = br.readLine();
+			if (s != null)
+				st = new StringTokenizer(s);
+			else
+				return null;
+		}
+		return st.nextToken();
 	}
 }

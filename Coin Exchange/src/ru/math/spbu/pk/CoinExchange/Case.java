@@ -18,18 +18,6 @@ public class Case extends HashMap<Integer, Integer> {
 	private static final long serialVersionUID = 3155379491380118135L;
 
 	/**
-	 * Adds one "usage" for coin by it's value
-	 * @param value worth of used coin
-	 */
-	public void incrementCoin(int value) {
-		if (containsKey(value)) {
-			put(value, get(value) + 1);
-		} else {
-			put(value, 0 + 1);
-		}
-	}
-
-	/**
 	 * Default constructor
 	 */
 	public Case() {
@@ -48,7 +36,6 @@ public class Case extends HashMap<Integer, Integer> {
 		}
 	}
 
-	
 	/**
 	 * Adds pair "worth"-"amount"
 	 * @param value worth of coin
@@ -56,6 +43,19 @@ public class Case extends HashMap<Integer, Integer> {
 	 */
 	public void addCoins(int value, int amount) {
 		put(value, amount);
+	}
+
+	
+	/**
+	 * Adds one "usage" for coin by it's value
+	 * @param value worth of used coin
+	 */
+	public void incrementCoin(int value) {
+		if (containsKey(value)) {
+			put(value, get(value) + 1);
+		} else {
+			put(value, 0 + 1);
+		}
 	}
 
 	@Override

@@ -4,8 +4,8 @@ package ru.math.spbu.pk.CoinExchange;
  * 
  * This class marks the time, when some calculation starts and after some time
  * tries to stop it because for basics problems this applicaiton is fast. So PC
- * maybe freezed if calculation of easy problem is so long.
- * For really heavy problems you alse can just 'continue' compilation
+ * maybe freezed if calculation of easy problem is so long. Moreover, for really
+ * heavy problems you can just 'continue' compilation
  * 
  * @author Alpen Ditrix
  * 
@@ -13,10 +13,23 @@ package ru.math.spbu.pk.CoinExchange;
 public class WaiterOf extends Thread {
 
 	/**
+	 * Time in milliseconds. Every ___ms this thread will be active and will
+	 * chech if he must to act
+	 */
+	private static final int sleepTime = 100;
+
+	/**
+	 * Every {@link #sleepTime} equals to 1 tick. Every
+	 * {@value #printDotEvery_Ticks} ticks this thread will print something to
+	 * show "I'm not frezed"
+	 */
+	private static final int printDotEvery_Ticks = 10;
+
+	/**
 	 * Basic time of waiting is 3 seconds
 	 */
 	private long threshold = 3 * 1000;
-	
+
 	/**
 	 * After each continueing {@link #threshold} will be increased on this
 	 */
@@ -36,14 +49,18 @@ public class WaiterOf extends Thread {
 
 	/**
 	 * Default constructor
-	 * @param atm owner of calculatioin
-	 * @param uid unique id of calculation
+	 * 
+	 * @param atm
+	 *            owner of calculatioin
+	 * @param uid
+	 *            unique id of calculation
 	 */
 	public WaiterOf(ATM atm, long uid) {
 		observedATM = atm;
 		UID = uid;
 	}
 
+	@Override
 	public void run() {
 		long start = System.currentTimeMillis();
 		int i = Integer.MIN_VALUE;
@@ -52,20 +69,23 @@ public class WaiterOf extends Thread {
 			while (System.currentTimeMillis() - start < threshold
 					&& observedATM.isRunning(UID)) {
 				try {
-					if (i++ % 10 == 0) {
+					if (i++ % printDotEvery_Ticks == 0) {
 						System.out.println(".");
 					}
-					sleep(100);
+					sleep(sleepTime);
 					// System.out.println("Waiter cycle");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
+
 			// System.out.println("Waiter asking");
 			if (observedATM.askToTerminateComputation(UID)) {
+				/* computation terminated */
 				break;
 				// return;
 			} else {
+				/* cumputation continued */
 				start = System.currentTimeMillis();
 				threshold *= increaseFactor;
 				increaseFactor *= increaseIncreaseFactorFactor;

@@ -39,7 +39,7 @@ public class ATM {
 	 */
 	public ATM(int[] worths) {
 		if (worths.length < 1) {
-			throw new RuntimeException(Messages.getString("noCoins")); //$NON-NLS-1$
+			throw new RuntimeException(Messages.getString("noCoins"));
 		}
 
 		// checkForDuplicates
@@ -71,26 +71,6 @@ public class ATM {
 	}
 
 	/**
-	 * That method starts support-service and sets running-flag. Also it may
-	 * return {@link ListOfCases#WRONG_INPUT} for wrong money amount
-	 * 
-	 * @param moneyToExchange
-	 *            how much to exchange
-	 * @return list of options "how to exchange"
-	 */
-	public ListOfCases exchange(int moneyToExchange) {
-		running = true;
-		synchronized (this) {
-			currentUID = new Random().nextLong();
-			new WaiterOf(this, currentUID).start();
-		}
-		if (moneyToExchange < 1) {
-			return ListOfCases.WRONG_INPUT;
-		}
-		return computeCases(moneyToExchange);
-	}
-
-	/**
 	 * This method creates storage structure, marks timedout case-lists and
 	 * cares about {@link StackOverflowError}. Also here will be set off the
 	 * flag "running"
@@ -116,11 +96,11 @@ public class ATM {
 				}
 			}
 		} catch (StackOverflowError e) {
-			System.err.println(Messages.getString("stackOverflow")); //$NON-NLS-1$
+			System.err.println(Messages.getString("stackOverflow"));
 		} catch (Exception e) {
-			System.err.println(Messages.getString("SmthIsWrong")); //$NON-NLS-1$
+			System.err.println(Messages.getString("SmthIsWrong"));
 		}
-		running = false;
+
 		return cases;
 	}
 
@@ -154,7 +134,7 @@ public class ATM {
 					// I have no more coins to exchange money. E.g. you can't
 					// exchange 3$ using only 2$ coins
 					throw new RuntimeException(
-							Messages.getString("notEnoughCoins")); //$NON-NLS-1$
+							Messages.getString("notEnoughCoins"));
 				}
 				cases.add(c);
 			}
@@ -177,8 +157,34 @@ public class ATM {
 		}
 	}
 
-	public String toString() {
-		return Arrays.toString(availableCoinWorth);
+	/**
+	 * That method starts support-service and sets running-flag. Also it may
+	 * return {@link ListOfCases#WRONG_INPUT} for wrong money amount
+	 * 
+	 * @param moneyToExchange
+	 *            how much to exchange
+	 * @return list of options "how to exchange"
+	 */
+	public ListOfCases exchange(int moneyToExchange) {
+		synchronized (this) {
+			running = true;
+			currentUID = new Random().nextLong();
+			new WaiterOf(this, currentUID).start();
+		}
+		ListOfCases resultList = moneyToExchange < 1 ? ListOfCases.WRONG_INPUT
+				: computeCases(moneyToExchange);
+		synchronized (this) {
+			running = false;
+		}
+		return resultList;
+	}
+
+	/**
+	 * @return if that calculation is running
+	 */
+	public synchronized boolean isRunning() {
+			// System.out.println("isRunning");
+			return running;
 	}
 
 	/**
@@ -186,28 +192,21 @@ public class ATM {
 	 *            unique calculation ID
 	 * @return if it is specified calculation and if it's running
 	 */
-	public boolean isRunning(long UID) {
-		synchronized (this) {
+	public synchronized boolean isRunning(long UID) {
 			// System.out.println("Checked");
 			return running && UID == currentUID;
-		}
 	}
 
-	/**
-	 * @return if that calculation is running
-	 */
-	public boolean isRunning() {
-		synchronized (this) {
-			// System.out.println("isRunning");
-			return running;
-		}
+	@Override
+	public String toString() {
+		return Arrays.toString(availableCoinWorth);
 	}
 
 	/**
 	 * Figures out is some computation may be running, or it's need to be
 	 * terminated becouse of something
 	 */
-	private boolean running;
+	private volatile boolean running;
 
 	/**
 	 * It's needed to know is some computation with specified Id has beed
@@ -222,23 +221,22 @@ public class ATM {
 	 *            Id of calculatioin to stop
 	 * @return if termination was successful
 	 */
-	public boolean askToTerminateComputation(long UID) {
-		synchronized (this) {
+	public synchronized boolean askToTerminateComputation(long UID) {
 			// System.out.println("Entered");
 			if (isRunning(UID)) {
 				// System.out.println("Came through");
-				System.err.println(Messages.getString("timeout")); //$NON-NLS-1$
+				System.err.println(Messages.getString("timeoutQuestion"));
 				boolean gotIt = false;
 				while (!gotIt) {
 					try {
 						String s = new BufferedReader(new InputStreamReader(
 								System.in)).readLine();
-						if (s.toLowerCase().equals("y") //$NON-NLS-1$
-								|| s.toLowerCase().equals("ó")) { //$NON-NLS-1$
+						if (s.toLowerCase().equals("y")
+								|| s.toLowerCase().equals("ó")) {
 							// let's stop it
 							running = false;
 							gotIt = true;
-						} else if (s.toLowerCase().equals("n")) { //$NON-NLS-1$
+						} else if (s.toLowerCase().equals("n")) {
 							// kk. Just go on
 							gotIt = true;
 						}
@@ -247,7 +245,6 @@ public class ATM {
 					}
 				}
 			}
-		}
 		return !running;
 		// System.out.println("Waiter got answer and exited from sync-block");
 	}
