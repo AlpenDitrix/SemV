@@ -13,9 +13,9 @@ import java.util.Map;
 public class Case extends HashMap<Integer, Integer> {
 
 	/**
-	 * Generates serial versioin ID
+	 * Date of last hard change
 	 */
-	private static final long serialVersionUID = 3155379491380118135L;
+	private static final long serialVersionUID = 20130919L;
 
 	/**
 	 * Default constructor

@@ -11,10 +11,10 @@ import java.util.ArrayList;
 public class ListOfCases extends ArrayList<Case> {
 
 	/**
-	 * 
+	 * Date of last hard change
 	 */
-	private static final long serialVersionUID = 8037932627088736022L;
-
+	private static final long serialVersionUID = 20130919L;
+	
 	/**
 	 * This instance will be returned if ATM got wrong input
 	 */
@@ -39,11 +39,11 @@ public class ListOfCases extends ArrayList<Case> {
 	/**
 	 * Shows how much timedOuts were
 	 */
-	private static int timedOutCounter = 0;
+	private transient static int timedOutCounter = 0;
 	/**
 	 * Show how much times someone used wrong input
 	 */
-	private static int badCounter = 0;
+	private transient static int badCounter = 0;
 
 	/**
 	 * Sets flag and check counter
