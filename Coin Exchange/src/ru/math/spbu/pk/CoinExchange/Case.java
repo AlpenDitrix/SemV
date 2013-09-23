@@ -41,7 +41,7 @@ public class Case extends HashMap<Integer, Integer> {
 	 * @param value worth of coin
 	 * @param amount how much it must be used
 	 */
-	public void addCoins(int value, int amount) {
+	public void addCoins(Integer value, Integer amount) {
 		put(value, amount);
 	}
 
@@ -50,7 +50,7 @@ public class Case extends HashMap<Integer, Integer> {
 	 * Adds one "usage" for coin by it's value
 	 * @param value worth of used coin
 	 */
-	public void incrementCoin(int value) {
+	public void incrementCoin(Integer value) {
 		if (containsKey(value)) {
 			put(value, get(value) + 1);
 		} else {

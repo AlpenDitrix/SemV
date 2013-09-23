@@ -70,6 +70,8 @@ public class ATM {
 
 	}
 
+	private transient ListOfCases cases;
+
 	/**
 	 * This method creates storage structure, marks timedout case-lists and
 	 * cares about {@link StackOverflowError}. Also here will be set off the
@@ -81,7 +83,7 @@ public class ATM {
 	 */
 	private ListOfCases computeCases(int given) {
 		// create empty list of lists
-		ListOfCases cases = new ListOfCases();
+		cases = new ListOfCases();
 		long start = System.currentTimeMillis();
 		try {
 			// external cycle "with which coin to start"
