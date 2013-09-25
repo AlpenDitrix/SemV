@@ -11,10 +11,10 @@ import java.util.ArrayList;
 public class ListOfCases extends ArrayList<Case> {
 
 	/**
-	 * 
+	 * Date of last hard change
 	 */
-	private static final long serialVersionUID = 8037932627088736022L;
-
+	private static final long serialVersionUID = 20130919L;
+	
 	/**
 	 * This instance will be returned if ATM got wrong input
 	 */
@@ -24,9 +24,10 @@ public class ListOfCases extends ArrayList<Case> {
 		 */
 		private static final long serialVersionUID = -6741001396872270661L;
 
+		@Override
 		public String toString() {
 			bad();
-			return Messages.getString("ListOfCases.fakeMoney");
+			return Messages.getString("fakeMoney");
 		}
 
 	};
@@ -38,34 +39,28 @@ public class ListOfCases extends ArrayList<Case> {
 	/**
 	 * Shows how much timedOuts were
 	 */
-	private static int timedOutCounter = 0;
+	private transient static int timedOutCounter = 0;
 	/**
 	 * Show how much times someone used wrong input
 	 */
-	private static int badCounter = 0;
+	private transient static int badCounter = 0;
 
-	public String toString() {
-		if (size() == 0) {
-			return Messages.getString("ListOfCases.noCases");
+	/**
+	 * Sets flag and check counter
+	 */
+	private static void bad() {
+		badCounter++;
+		checkCounters();
+	}
+
+	@SuppressWarnings("javadoc")
+	private static void checkCounters() {
+		if (timedOutCounter == 3) {
+			System.err.println(Messages.getString("tooSlow"));
 		}
-		if (size() > 0) {
-			StringBuilder sb = new StringBuilder();
-			if (timedOut) {
-				sb.append(Messages.getString("ListOfCases.timeout"));
-			}
-			sb.append(String.format(Messages.getString("ListOfCases.hereIs"),
-					Integer.toString(size()), size() > 1 ? "s" : "")); 
-			for (Case c : this) {
-				sb.append("\n_______\n");
-				sb.append(c.toString());
-			}
-			if (timedOut) {
-				sb.append(Messages.getString("ListOfCases.timeout"));
-			}
-			return sb.toString();
-
-		} else {
-			return Messages.getString("ListOfCases.failedExchange");
+		if (badCounter == 3) {
+			System.err
+					.println(Messages.getString("nigga"));
 		}
 	}
 
@@ -79,21 +74,47 @@ public class ListOfCases extends ArrayList<Case> {
 	}
 
 	/**
-	 * Sets flag and check counter
+	 * @param worths all worths, which can be met into results
+	 * @return array of case-arrays
 	 */
-	private static void bad() {
-		badCounter++;
-		checkCounters();
-	}
-
-	@SuppressWarnings("javadoc")
-	private static void checkCounters() {
-		if (timedOutCounter == 3) {
-			System.err.println(Messages.getString("ListOfCases.tooSlow"));
+	public int[][] toDoubleArray(int[] worths){
+		Case[] c = new Case[0];
+		c = this.toArray(c);
+		int[][] output = new int[c.length][worths.length];
+		for(int i = 0; i<c.length; i++) {
+			for(int j = 0; j<worths.length; j++) {
+				Integer inte = c[i].get(worths[j]);
+				output[i][j] =  inte == null ? 0 : inte;
+					;
+			}
 		}
-		if (badCounter == 3) {
-			System.err
-					.println(Messages.getString("ListOfCases.nigga"));
+		
+		return output;
+	}
+	
+	@Override
+	public String toString() {
+		if (size() == 0) {
+			return Messages.getString("noCases");
+		}
+		if (size() > 0) {
+			StringBuilder sb = new StringBuilder();
+			if (timedOut) {
+				sb.append(Messages.getString("timeout"));
+			}
+			sb.append(String.format(Messages.getString("hereIs"),
+					Integer.toString(size()), size() > 1 ? "s" : "")); 
+			for (Case c : this) {
+				sb.append("\n_______\n");
+				sb.append(c.toString());
+			}
+			if (timedOut) {
+				sb.append(Messages.getString("timeout"));
+			}
+			return sb.toString();
+
+		} else {
+			return Messages.getString("failedExchange");
 		}
 	}
 
