@@ -1,6 +1,7 @@
 package ru.math.spbu.pk.CoinExchange;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,21 +24,21 @@ public class ATM {
 	private final int[] availableCoinWorth;
 
 	/**
-	 * Default worths is 1 3 5 and 10
+	 * Object, which processes output
 	 */
-	public ATM() {
-		int[] w = { 1, 3, 5, 10 };
-		availableCoinWorth = w;
-	}
-
+	private final IPrintable printer;
+	
 	/**
-	 * Set your custom available worths. Also this constructor will remove all
-	 * duplicated worths
+	 * Set your custom available worths.
 	 * 
-	 * @param worths
-	 *            array of worths of coins, which you want to use
+	 * @param w array of denominations 
+	 * @param p printer
+	 * 
 	 */
-	public ATM(int[] worths) {
+	public ATM(int[] w, IPrintable p) {
+		int[] worths = w.clone();
+		printer = p;
+
 		if (worths.length < 1) {
 			throw new RuntimeException(Messages.getString("noCoins"));
 		}
@@ -62,15 +63,13 @@ public class ATM {
 			availableCoinWorth = newArray;
 		} else {
 			// just copy
-			availableCoinWorth = worths;
+			availableCoinWorth = w;
 		}
 
 		// descending sorting => highest is first, lowest is last
 		Quicksort.sort(availableCoinWorth, false);
 
 	}
-
-	private transient ListOfCases cases;
 
 	/**
 	 * This method creates storage structure, marks timedout case-lists and
@@ -81,20 +80,12 @@ public class ATM {
 	 *            how much money was given to ATM
 	 * @return list of options "how to exchange"
 	 */
-	private ListOfCases computeCases(int given) {
-		// create empty list of lists
-		cases = new ListOfCases();
-		long start = System.currentTimeMillis();
+	private void computeCases(int given) {
+
 		try {
-			// external cycle "with which coin to start"
 			for (int i = 0; i < availableCoinWorth.length; i++) {
 				if (isRunning()) {
-					computeCases0(given, i, new Case(), cases);
-				} else {
-					System.out.println(System.currentTimeMillis() - start);
-					cases.setTimedOut();
-					// throw new RuntimeException("Computation timed out!");
-					return cases;
+					computeCases0(given, i, new Case());
 				}
 			}
 		} catch (StackOverflowError e) {
@@ -102,8 +93,6 @@ public class ATM {
 		} catch (Exception e) {
 			System.err.println(Messages.getString("SmthIsWrong"));
 		}
-
-		return cases;
 	}
 
 	/**
@@ -119,7 +108,7 @@ public class ATM {
 	 * @param cases
 	 *            list, where current case will be finally added
 	 */
-	private void computeCases0(int given, int i, Case c, ListOfCases cases) {
+	private void computeCases0(int given, int i, Case c) {
 		if (!isRunning()) {
 			return;
 		}
@@ -138,7 +127,11 @@ public class ATM {
 					throw new RuntimeException(
 							Messages.getString("notEnoughCoins"));
 				}
-				cases.add(c);
+				try {
+					printer.print(c);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			// so I can't use this coin. Go to upper method to the
 			// "recursion cycle"
@@ -154,8 +147,7 @@ public class ATM {
 			 * 
 			 * 3)create new case-branch Case next = new Case(c);
 			 */
-			computeCases0(given - availableCoinWorth[i], i + j, new Case(c),
-					cases);
+			computeCases0(given - availableCoinWorth[i], i + j, new Case(c));
 		}
 	}
 
@@ -167,26 +159,26 @@ public class ATM {
 	 *            how much to exchange
 	 * @return list of options "how to exchange"
 	 */
-	public ListOfCases exchange(int moneyToExchange) {
+	public void exchange(int moneyToExchange) {
 		synchronized (this) {
 			running = true;
 			currentUID = new Random().nextLong();
-			new WaiterOf(this, currentUID).start();
+			new WaiterOf(this, currentUID, 3000).start();
 		}
-		ListOfCases resultList = moneyToExchange < 1 ? ListOfCases.WRONG_INPUT
-				: computeCases(moneyToExchange);
+
+		computeCases(moneyToExchange);
+
 		synchronized (this) {
 			running = false;
 		}
-		return resultList;
 	}
 
 	/**
 	 * @return if that calculation is running
 	 */
 	public synchronized boolean isRunning() {
-			// System.out.println("isRunning");
-			return running;
+		// System.out.println("isRunning");
+		return running;
 	}
 
 	/**
@@ -195,8 +187,7 @@ public class ATM {
 	 * @return if it is specified calculation and if it's running
 	 */
 	public synchronized boolean isRunning(long UID) {
-			// System.out.println("Checked");
-			return running && UID == currentUID;
+		return running && UID == currentUID;
 	}
 
 	@Override
@@ -224,29 +215,29 @@ public class ATM {
 	 * @return if termination was successful
 	 */
 	public synchronized boolean askToTerminateComputation(long UID) {
-			// System.out.println("Entered");
-			if (isRunning(UID)) {
-				// System.out.println("Came through");
-				System.err.println(Messages.getString("timeoutQuestion"));
-				boolean gotIt = false;
-				while (!gotIt) {
-					try {
-						String s = new BufferedReader(new InputStreamReader(
-								System.in)).readLine();
-						if (s.toLowerCase().equals("y")
-								|| s.toLowerCase().equals("ó")) {
-							// let's stop it
-							running = false;
-							gotIt = true;
-						} else if (s.toLowerCase().equals("n")) {
-							// kk. Just go on
-							gotIt = true;
-						}
-					} catch (Exception e) {
-
+		// System.out.println("Entered");
+		if (isRunning(UID)) {
+			// System.out.println("Came through");
+			System.err.println(Messages.getString("timeoutQuestion"));
+			boolean gotIt = false;
+			while (!gotIt) {
+				try {
+					String s = new BufferedReader(new InputStreamReader(
+							System.in)).readLine();
+					if (s.toLowerCase().equals("y")
+							|| s.toLowerCase().equals("ó")) {
+						// let's stop it
+						running = false;
+						gotIt = true;
+					} else if (s.toLowerCase().equals("n")) {
+						// kk. Just go on
+						gotIt = true;
 					}
+				} catch (Exception e) {
+
 				}
 			}
+		}
 		return !running;
 		// System.out.println("Waiter got answer and exited from sync-block");
 	}

@@ -37,16 +37,6 @@ public class Case extends HashMap<Integer, Integer> {
 	}
 
 	/**
-	 * Adds pair "worth"-"amount"
-	 * @param value worth of coin
-	 * @param amount how much it must be used
-	 */
-	public void addCoins(Integer value, Integer amount) {
-		put(value, amount);
-	}
-
-	
-	/**
 	 * Adds one "usage" for coin by it's value
 	 * @param value worth of used coin
 	 */

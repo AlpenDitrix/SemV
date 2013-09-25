@@ -17,19 +17,12 @@ public class WaiterOf extends Thread {
 	 * chech if he must to act
 	 */
 	private static final int sleepTime = 100;
-
 	/**
 	 * Every {@link #sleepTime} equals to 1 tick. Every
 	 * {@value #printDotEvery_Ticks} ticks this thread will print something to
 	 * show "I'm not frezed"
 	 */
 	private static final int printDotEvery_Ticks = 10;
-
-	/**
-	 * Basic time of waiting is 3 seconds
-	 */
-	private long threshold = 3 * 1000;
-
 	/**
 	 * After each continueing {@link #threshold} will be increased on this
 	 */
@@ -37,7 +30,13 @@ public class WaiterOf extends Thread {
 	/**
 	 * After each continueing {@link #increaseFactor} will be increased on this
 	 */
-	private double increaseIncreaseFactorFactor = 6 / 5d;
+
+	private static final double increaseIncreaseFactorFactor = 6 / 5d;
+	/**
+	 * Basic time of waiting is 3 seconds
+	 */
+	private long threshold = 3 * 1000;
+
 	/**
 	 * Link to ATM, for whose calculations that class follows
 	 */
@@ -55,8 +54,9 @@ public class WaiterOf extends Thread {
 	 * @param uid
 	 *            unique id of calculation
 	 */
-	public WaiterOf(ATM atm, long uid) {
+	public WaiterOf(ATM atm, long uid, long thresh) {
 		observedATM = atm;
+		threshold = thresh;
 		UID = uid;
 	}
 

@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import ru.math.spbu.pk.CoinExchange.ATM;
+import ru.math.spbu.pk.CoinExchange.Case;
+import ru.math.spbu.pk.CoinExchange.IPrintable;
 
 @SuppressWarnings("javadoc")
 public class Test {
@@ -16,17 +18,18 @@ public class Test {
 	static Parser p = new Parser();
 
 	public static void main(String[] s) throws IOException {
-		// 1)SET UP THE ATM
-		ATM atm = new ATM(readWorths());
+
+		ATM atm = new ATM(readWorths(), new IPrintable() {
+
+			@Override
+			public void print(Case c) throws IOException {
+				System.out.println(c);
+			}
+
+		});
 		// 2)WORK WITH HIM
 		while (true) {
-			try {
-				System.err.println(atm.exchange(readMoney()));
-			} catch (NumberFormatException e) {
-				System.out.println(Messages.getString("bye"));
-				return;
-
-			}
+			atm.exchange(readMoney());
 		}
 	}
 
