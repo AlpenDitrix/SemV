@@ -13,21 +13,9 @@ import java.util.Map;
 public class Case extends HashMap<Integer, Integer> {
 
 	/**
-	 * Generates serial versioin ID
+	 * Date of last hard change
 	 */
-	private static final long serialVersionUID = 3155379491380118135L;
-
-	/**
-	 * Adds one "usage" for coin by it's value
-	 * @param value worth of used coin
-	 */
-	public void incrementCoin(int value) {
-		if (containsKey(value)) {
-			put(value, get(value) + 1);
-		} else {
-			put(value, 0 + 1);
-		}
-	}
+	private static final long serialVersionUID = 20130919L;
 
 	/**
 	 * Default constructor
@@ -48,14 +36,16 @@ public class Case extends HashMap<Integer, Integer> {
 		}
 	}
 
-	
 	/**
-	 * Adds pair "worth"-"amount"
-	 * @param value worth of coin
-	 * @param amount how much it must be used
+	 * Adds one "usage" for coin by it's value
+	 * @param value worth of used coin
 	 */
-	public void addCoins(int value, int amount) {
-		put(value, amount);
+	public void incrementCoin(Integer value) {
+		if (containsKey(value)) {
+			put(value, get(value) + 1);
+		} else {
+			put(value, 0 + 1);
+		}
 	}
 
 	@Override

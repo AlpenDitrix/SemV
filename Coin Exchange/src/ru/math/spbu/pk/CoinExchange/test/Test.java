@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import ru.math.spbu.pk.CoinExchange.ATM;
+import ru.math.spbu.pk.CoinExchange.Case;
+import ru.math.spbu.pk.CoinExchange.IPrintable;
 
 @SuppressWarnings("javadoc")
 public class Test {
@@ -16,16 +18,18 @@ public class Test {
 	static Parser p = new Parser();
 
 	public static void main(String[] s) throws IOException {
-		// 1)SET UP THE ATM
-		ATM atm = new ATM(readWorths());
+
+		ATM atm = new ATM(readWorths(), new IPrintable() {
+
+			@Override
+			public void print(Case c) throws IOException {
+				System.out.println(c);
+			}
+
+		});
 		// 2)WORK WITH HIM
 		while (true) {
-			try {
-				System.err.println(atm.exchange(readMoney()));
-			} catch (NumberFormatException e) {
-				System.err
-						.println(Messages.getString("PleaseDigits"));
-			}
+			atm.exchange(readMoney());
 		}
 	}
 
@@ -37,14 +41,12 @@ public class Test {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out
-				.println(Messages.getString("EnterMoney"));
+		System.out.println(Messages.getString("EnterMoney"));
 		return p.nextInteger();
 	}
 
 	private static int[] readWorths() throws IOException {
-		System.out
-				.println(Messages.getString("EnterWorths"));
+		System.out.println(Messages.getString("EnterWorths"));
 		List<Integer> list = new ArrayList<>();
 		String s = p.nextString();
 		while (true) {
@@ -62,8 +64,7 @@ public class Test {
 				}
 				list.add(Integer.parseInt(s));
 			} catch (NumberFormatException e) {
-				System.err
-						.println(Messages.getString("PleaseDigitsEtc"));
+				System.err.println(Messages.getString("PleaseDigitsEtc"));
 			}
 			s = p.nextString();
 		}
@@ -71,12 +72,12 @@ public class Test {
 		// may be made better, but so will do
 		if (list.size() < 1) {
 			int[] v = { 1, 3, 5, 10 };
-			System.out.println(Messages.getString("Good")
-					.concat(Arrays.toString(v)));
+			System.out.println(Messages.getString("Good").concat(
+					Arrays.toString(v)));
 			return v;
 		} else {
-			System.out.println(Messages.getString("Good")
-					.concat(list.toString()));
+			System.out.println(Messages.getString("Good").concat(
+					list.toString()));
 			int[] v = new int[list.size()];
 			for (int i = 0; i < v.length; i++) {
 				v[i] = list.get(i);
