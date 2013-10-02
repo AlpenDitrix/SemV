@@ -1,4 +1,4 @@
-package ru.math.spbu.pk.CoinExchange;
+package vladimir.chugunov.CoinExchange;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package ru.math.spbu.pk.CoinExchange;
+package vladimir.chugunov.CoinExchange;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,12 +27,14 @@ public class ATM {
 	 * Object, which processes output
 	 */
 	private final IPrintable printer;
-	
+
 	/**
 	 * Set your custom available worths.
 	 * 
-	 * @param w array of denominations 
-	 * @param p printer
+	 * @param w
+	 *            array of denominations
+	 * @param p
+	 *            printer
 	 * 
 	 */
 	public ATM(int[] w, IPrintable p) {
@@ -78,14 +80,13 @@ public class ATM {
 	 * 
 	 * @param given
 	 *            how much money was given to ATM
-	 * @return list of options "how to exchange"
 	 */
 	private void computeCases(int given) {
 
 		try {
 			for (int i = 0; i < availableCoinWorth.length; i++) {
 				if (isRunning()) {
-					computeCases0(given, i, new Case());
+					computeCases0(given, i, new int[availableCoinWorth.length]);
 				}
 			}
 		} catch (StackOverflowError e) {
@@ -108,7 +109,7 @@ public class ATM {
 	 * @param cases
 	 *            list, where current case will be finally added
 	 */
-	private void computeCases0(int given, int i, Case c) {
+	private void computeCases0(int given, int i, int[] c) {
 		if (!isRunning()) {
 			return;
 		}
@@ -116,7 +117,7 @@ public class ATM {
 		// if I can use this coin
 		if (given >= availableCoinWorth[i]) {
 			// ...increment amount of used coins of this worth
-			c.incrementCoin(availableCoinWorth[i]);
+			c[i]++;
 		} else {
 			// if I have no coins with fewer worth, I must end this Case and add
 			// it to list
@@ -128,7 +129,7 @@ public class ATM {
 							Messages.getString("notEnoughCoins"));
 				}
 				try {
-					printer.print(c);
+					printer.print(availableCoinWorth, c);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -147,7 +148,7 @@ public class ATM {
 			 * 
 			 * 3)create new case-branch Case next = new Case(c);
 			 */
-			computeCases0(given - availableCoinWorth[i], i + j, new Case(c));
+			computeCases0(given - availableCoinWorth[i], i + j, c.clone());
 		}
 	}
 
@@ -157,7 +158,6 @@ public class ATM {
 	 * 
 	 * @param moneyToExchange
 	 *            how much to exchange
-	 * @return list of options "how to exchange"
 	 */
 	public void exchange(int moneyToExchange) {
 		synchronized (this) {
