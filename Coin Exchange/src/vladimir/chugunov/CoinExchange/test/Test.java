@@ -1,13 +1,12 @@
-package ru.math.spbu.pk.CoinExchange.test;
+package vladimir.chugunov.CoinExchange.test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import ru.math.spbu.pk.CoinExchange.ATM;
-import ru.math.spbu.pk.CoinExchange.Case;
-import ru.math.spbu.pk.CoinExchange.IPrintable;
+import vladimir.chugunov.CoinExchange.ATM;
+import vladimir.chugunov.CoinExchange.IPrintable;
 
 @SuppressWarnings("javadoc")
 public class Test {
@@ -22,14 +21,27 @@ public class Test {
 		ATM atm = new ATM(readWorths(), new IPrintable() {
 
 			@Override
-			public void print(Case c) throws IOException {
-				System.out.println(c);
+			public void print(int[] worths, int[] coins) throws IOException {
+				if (worths.length != coins.length) {
+					throw new RuntimeException("wrong dimensions");
+				}
+				for (int i = 0; i < worths.length; i++) {
+					if (coins[i] != 0) {
+						System.out.println("'" + worths[i] + "' : " + coins[i]);
+					}
+				}
+				System.out.println();
 			}
 
 		});
 		// 2)WORK WITH HIM
 		while (true) {
-			atm.exchange(readMoney());
+			try {
+				atm.exchange(readMoney());
+			} catch (Exception e) {
+				System.out.println();
+				break;
+			}
 		}
 	}
 
@@ -62,7 +74,16 @@ public class Test {
 					}
 					break;
 				}
-				list.add(Integer.parseInt(s));
+				int arrived = Integer.parseInt(s);
+				if (arrived < 0) {
+					System.err.println(Messages.getString("NotNegative"));
+				} else if (arrived == 0) {
+					System.err.println(Messages.getString("NotZero"));
+				} else {
+					if (!list.contains(arrived)) {
+						list.add(arrived);
+					}
+				}
 			} catch (NumberFormatException e) {
 				System.err.println(Messages.getString("PleaseDigitsEtc"));
 			}

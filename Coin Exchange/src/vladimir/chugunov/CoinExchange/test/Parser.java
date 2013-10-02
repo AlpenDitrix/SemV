@@ -1,4 +1,4 @@
-package ru.math.spbu.pk.CoinExchange.test;
+package vladimir.chugunov.CoinExchange.test;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
