@@ -455,7 +455,7 @@ public class BinaryTree implements interfaces.Tree.ITree {
 	/*
 	 * private class DfsTreeIterator implements Iterator {
 	 * 
-	 * private Stack<Node> pathToHere = new Stack<>();
+	 * private stack<Node> pathToHere = new stack<>();
 	 * private Node next = root;
 	 * private Node returnedToRemove;
 	 * 
