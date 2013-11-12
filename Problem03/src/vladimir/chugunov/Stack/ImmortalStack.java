@@ -2,7 +2,11 @@ package vladimir.chugunov.Stack;
 
 import interfaces.stack.IStack;
 
-/** User: Alpen Ditrix Date: 12.11.13 Time: 15:06 */
+/**
+ * Адаптивный стек. Размер хранилища изменяется автоматически или вручную.
+ * <p/>
+ * User: Alpen Ditrix Date: 12.11.13 Time: 15:06
+ */
 public class ImmortalStack<E> implements IStack<E> {
 
     /** "Хранилище" стека */
@@ -121,15 +125,16 @@ public class ImmortalStack<E> implements IStack<E> {
     /**
      * Проверяет не стало ли число элементов массива слишком мало, по сравнению с размером массива и уменьшает
      * "хранилище", если надо. Однако алгоритм никогда не создаст массив с длинной меньше 10
-     *
-     * Необходимым "магическим" условием для уменьшения "хранилища" считается "элементы занимают меньше четверти хранилища"
+     * <p/>
+     * Необходимым "магическим" условием для уменьшения "хранилища" считается "элементы занимают меньше четверти
+     * хранилища"
      */
     private void tryShrink() {
         if (elementData.length / 4 <= elementCount) {
             return;
         } else {
             if (elementData.length > 10) {
-                Object[] newArray = new Object[Math.max(elementData.length / 2,10)];
+                Object[] newArray = new Object[Math.max(elementData.length / 2, 10)];
                 System.arraycopy(elementData, 0, newArray, 0, elementCount + 1);
                 elementData = newArray;
             }
@@ -170,6 +175,24 @@ public class ImmortalStack<E> implements IStack<E> {
     @Override
     public int size() {
         return elementCount + 1;
+    }
+
+    /**
+     * Создает хранилище нового размера и копирует в него все данные из старого. Новое хранилище точно должно вмещать
+     * все элементы из старого (чтобы ничего не потерять)
+     *
+     * @param newCapacity новый размер
+     *
+     * @return был ли успешно изменен размер
+     */
+    public boolean checkAndSetNewCapacity(int newCapacity) {
+        if (newCapacity < elementCount) {
+            return false;
+        }
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, elementCount + 1);
+        elementData = newArray;
+        return true;
     }
 
 }

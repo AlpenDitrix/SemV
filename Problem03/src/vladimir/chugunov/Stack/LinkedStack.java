@@ -2,7 +2,11 @@ package vladimir.chugunov.Stack;
 
 import interfaces.stack.IStack;
 
-/** User: Alpen Ditrix Date: 12.11.13 Time: 15:01 */
+/**
+ * Безразмерный стек. Не имеет локализованного хранилища.
+ * <p/>
+ * User: Alpen Ditrix Date: 12.11.13 Time: 15:01
+ */
 public class LinkedStack<E> implements IStack<E> {
 
     /** Вершина стека */

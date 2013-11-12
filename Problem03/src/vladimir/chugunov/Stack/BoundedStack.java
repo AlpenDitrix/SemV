@@ -2,7 +2,11 @@ package vladimir.chugunov.Stack;
 
 import interfaces.stack.IStack;
 
-/** User: Alpen Ditrix Date: 12.11.13 Time: 14:10 */
+/**
+ * Ограниченный стек. Размер хранилища может быть изменен только мануально
+ * <p/>
+ * User: Alpen Ditrix Date: 12.11.13 Time: 14:10
+ */
 public class BoundedStack<E> implements IStack<E> {
 
     /** "Хранилище" стека */
@@ -62,6 +66,20 @@ public class BoundedStack<E> implements IStack<E> {
         }
         System.out.println(String.format("isEmpty() = %s", bs.isEmpty()));
 
+        System.out
+              .println(String.format("\nИзменение размера на %s. Успех: %s",
+                                     bs.getBound() + 5, bs.checkAndSetNewCapacity(bs.getBound() + 5)));
+        bs.push(0);
+        System.out.println(String.format("push(%s), size() = %s", 0, bs.size()));
+        bs.push(0);
+        System.out.println(String.format("push(%s), size() = %s", 0, bs.size()));
+        bs.push(0);
+        System.out.println(String.format("push(%s), size() = %s", 0, bs.size()));
+        bs.push(0);
+        System.out.println(String.format("push(%s), size() = %s", 0, bs.size()));
+        bs.push(0);
+        System.out.println(String.format("push(%s), size() = %s", 0, bs.size()));
+
         System.out.println("\nДостаем");
         for (int i = 0; i < bs.getBound(); i++) {
             System.out.println(String.format("size() = %s, peek() = %s, pop() = %s", bs.size(), bs.peek(), bs.pop()));
@@ -119,5 +137,23 @@ public class BoundedStack<E> implements IStack<E> {
 
     public int getBound() {
         return elementData.length;
+    }
+
+    /**
+     * Создает хранилище нового размера и копирует в него все данные из старого. Новое хранилище точно должно вмещать
+     * все элементы из старого (чтобы ничего не потерять)
+     *
+     * @param newCapacity новый размер
+     *
+     * @return был ли успешно изменен размер
+     */
+    public boolean checkAndSetNewCapacity(int newCapacity) {
+        if (newCapacity < elementCount) {
+            return false;
+        }
+        Object[] newArray = new Object[newCapacity];
+        System.arraycopy(elementData, 0, newArray, 0, elementCount + 1);
+        elementData = newArray;
+        return true;
     }
 }
