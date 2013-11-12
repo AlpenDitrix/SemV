@@ -26,7 +26,7 @@ public interface IMyList<V> {
 	 * at least one element <tt>e</tt> such that
 	 * <tt>(o==null&nbsp;?&nbsp;e==null&nbsp;:&nbsp;o.equals(e))</tt>.
 	 * 
-	 * @param o
+	 * @param value
 	 *            element whose presence in this list is to be tested
 	 * @return <tt>true</tt> if this list contains the specified element
 	 * @throws ClassCastException
@@ -39,13 +39,6 @@ public interface IMyList<V> {
 	 *             (<a href="Collection.html#optional-restrictions">optional</a>)
 	 */
 	public boolean contains(Object value);
-
-	/**
-	 * Returns an iterator over the elements in this list in proper sequence.
-	 * 
-	 * @return an iterator over the elements in this list in proper sequence
-	 */
-	public void iterator(Visitor visitor);
 
 	/**
 	 * @return default iterator; does not support {@link Iterator#remove()}
@@ -100,7 +93,7 @@ public interface IMyList<V> {
 	 * 
 	 * Note that <tt>toArray(new Object[0])</tt> is identical in function to <tt>toArray()</tt>.
 	 * 
-	 * @param a
+	 * @param array
 	 *            the array into which the elements of this list are to
 	 *            be stored, if it is big enough; otherwise, a new array of the
 	 *            same runtime type is allocated for this purpose.
@@ -169,7 +162,7 @@ public interface IMyList<V> {
 	 * 
 	 * @param index
 	 *            index of the element to replace
-	 * @param element
+	 * @param value
 	 *            element to be stored at the specified position
 	 * @return the element previously at the specified position
 	 * @throws UnsupportedOperationException
@@ -215,7 +208,7 @@ public interface IMyList<V> {
 	 * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
 	 * or -1 if there is no such index.
 	 * 
-	 * @param o
+	 * @param value
 	 *            element to search for
 	 * @return the index of the first occurrence of the specified element in
 	 *         this list, or -1 if this list does not contain the element
@@ -228,6 +221,6 @@ public interface IMyList<V> {
 	 *             list does not permit null elements
 	 *             (<a href="Collection.html#optional-restrictions">optional</a>)
 	 */
-	public int indexOf(V value);
+	public int indexOf(Object value);
 
 }

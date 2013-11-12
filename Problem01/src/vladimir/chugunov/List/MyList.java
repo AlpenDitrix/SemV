@@ -1,9 +1,11 @@
 package vladimir.chugunov.List;
 
+import interfaces.IVisitor;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
-@SuppressWarnings("unchecked")
 public class MyList<V> implements IMyList<V> {
 
 	private int	size;
@@ -60,8 +62,9 @@ public class MyList<V> implements IMyList<V> {
 	}
 
 	private void checkIndex(final int index) {
-		if (index < 0 || index > size - 1) { throw new IndexOutOfBoundsException(String.format(
-				"Index: %s Size: %s", index, size)); }
+		if (index < 0 || index > size - 1) {
+			throw new IndexOutOfBoundsException(String.format("Index: %s Size: %s", index, size));
+		}
 	}
 
 	public MyList() {
@@ -70,7 +73,9 @@ public class MyList<V> implements IMyList<V> {
 	}
 
 	public void addItemsToEnd(final V... values) {
-		if (values.length == 0) { return; }
+		if (values.length == 0) {
+			return;
+		}
 		for (final Object v : values) {
 			final Node<V> newItem = new Node<V>((V) v);
 			lastItem.next = newItem;
@@ -121,7 +126,9 @@ public class MyList<V> implements IMyList<V> {
 	}
 
 	public V removeLast() {
-		if (getFirst().next == null) { return removeFirst(); }
+		if (getFirst().next == null) {
+			return removeFirst();
+		}
 
 		Node<V> runnerFirst = getFirst().next;
 		Node<V> runnerSecond = getFirst();
@@ -220,13 +227,13 @@ public class MyList<V> implements IMyList<V> {
 		return new ListItr();
 	}
 
-	public void iterator(final Visitor visitor) {
+	public void iterator(final IVisitor IVisitor) {
 		for (Node<V> cur = getFirst(); cur != null; cur = cur.next) {
-			visitor.visit(cur.value);
+			IVisitor.visit(cur.value);
 		}
 	}
 
-	public class Counter implements Visitor {
+	public class Counter implements IVisitor {
 
 		public int	count	= 0;
 
@@ -243,32 +250,54 @@ public class MyList<V> implements IMyList<V> {
 
 		Node<V>	next;
 
+		public ListItr(){
+			next = getFirst(); 
+		}
+		
 		public boolean hasNext() {
 			return next != null;
 		}
 
 		public V next() {
-			if (next == null) { throw new NoSuchElementException(); }
+			if (next == null) {
+				throw new NoSuchElementException();
+			}
 
 			final V value = next.value;
 			next = next.next;
 			return value;
 		}
-
+		
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
-
 	}
 
 	public V get(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		checkIndex(index);
+		Node<V> runner = getFirst();
+
+		for (int i = 0; i < index; i++) {
+			runner = runner.next;
+		}
+
+		return runner.value;
 	}
 
-	public int indexOf(V value) {
-		// TODO Auto-generated method stub
-		return 0;
+	public static void main(String[] args) {
+		IMyList<Integer> list = new MyList<>();
+
+		Random r = new Random();
+		for(int i = 1; i<1488; i++){
+			list.addItemsToEnd(i);
+		}
+		
+		System.out.println(list);
+		
+		Iterator<Integer> iter = list.getIterator();
+		while(iter.hasNext()){
+			System.out.println(iter.next());
+		}
 	}
 
 }
