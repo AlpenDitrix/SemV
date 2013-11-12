@@ -5,8 +5,16 @@ import interfaces.stack.IStack;
 /** User: Alpen Ditrix Date: 12.11.13 Time: 15:06 */
 public class ImmortalStack<E> implements IStack<E> {
 
+    /** "Хранилище" стека */
     private Object[] elementData;
+    /** Индекс вершины */
     private int      elementCount;
+    /**
+     * Коэффициент расширения массива. Когда текущий массив будет заполнен, в методе tryGrow() будет создан новый массив
+     * со старыми данными, но размера, вычисленного по формуле {@code текущийРазмер * (1 + capacityIncrement}
+     *
+     * @see vladimir.chugunov.Stack.ImmortalStack#tryGrow()
+     */
     private float    capacityIncrement;
 
 
@@ -95,6 +103,11 @@ public class ImmortalStack<E> implements IStack<E> {
 
     }
 
+    /**
+     * Проверяет не заполнился ли массив и расширяет его, если надо.
+     *
+     * @see ImmortalStack#capacityIncrement
+     */
     private void tryGrow() {
         if (elementData.length != elementCount + 1) {
             return;
@@ -105,12 +118,18 @@ public class ImmortalStack<E> implements IStack<E> {
         }
     }
 
+    /**
+     * Проверяет не стало ли число элементов массива слишком мало, по сравнению с размером массива и уменьшает
+     * "хранилище", если надо. Однако алгоритм никогда не создаст массив с длинной меньше 10
+     *
+     * Необходимым "магическим" условием для уменьшения "хранилища" считается "элементы занимают меньше четверти хранилища"
+     */
     private void tryShrink() {
         if (elementData.length / 4 <= elementCount) {
             return;
         } else {
             if (elementData.length > 10) {
-                Object[] newArray = new Object[elementData.length / 2];
+                Object[] newArray = new Object[Math.max(elementData.length / 2,10)];
                 System.arraycopy(elementData, 0, newArray, 0, elementCount + 1);
                 elementData = newArray;
             }
@@ -122,7 +141,6 @@ public class ImmortalStack<E> implements IStack<E> {
         tryGrow();
         elementData[++elementCount] = element;
     }
-
 
     @Override
     public E pop() throws ArrayIndexOutOfBoundsException {

@@ -5,7 +5,9 @@ import interfaces.stack.IStack;
 /** User: Alpen Ditrix Date: 12.11.13 Time: 14:10 */
 public class BoundedStack<E> implements IStack<E> {
 
+    /** "Хранилище" стека */
     private Object[] elementData;
+    /** Индекс вершины стека */
     private int      elementCount;
 
 
