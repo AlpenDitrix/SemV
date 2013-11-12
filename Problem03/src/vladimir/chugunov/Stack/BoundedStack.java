@@ -39,11 +39,7 @@ public class BoundedStack<E> implements IStack<E> {
 
     @Override
     public void clear() {
-        //helps GC
-        for (int i = 0; i < elementCount; i++) {
-            elementData[i] = null;
-        }
-
+        elementData = new Object[elementData.length];
         elementCount = -1;
     }
 
@@ -70,7 +66,7 @@ public class BoundedStack<E> implements IStack<E> {
      * @return был ли успешно изменен размер
      */
     public boolean checkAndSetNewCapacity(int newCapacity) {
-        if (newCapacity < elementCount) {
+        if (newCapacity <= elementCount) {
             return false;
         }
         Object[] newArray = new Object[newCapacity];

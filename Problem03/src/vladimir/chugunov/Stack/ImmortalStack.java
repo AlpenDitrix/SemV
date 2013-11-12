@@ -115,7 +115,7 @@ public class ImmortalStack<E> implements IStack<E> {
      * @return был ли успешно изменен размер
      */
     public boolean checkAndSetNewCapacity(int newCapacity) {
-        if (newCapacity < elementCount) {
+        if (newCapacity <= elementCount) {
             return false;
         }
         Object[] newArray = new Object[newCapacity];
