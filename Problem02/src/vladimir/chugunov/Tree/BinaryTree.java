@@ -422,8 +422,8 @@ public class BinaryTree implements interfaces.Tree.ITree {
 		System.out.println(tree.contains(100));
 
 		System.out.println(" ---- remove ---- ");
-		System.out.print(tree.contains(13) + "  remove(13)  ");
-		tree.remove(13);
+		System.out.print(tree.contains(142342) + "  remove(13)  ");
+		tree.remove(112341324);
 
 		System.out.println();
 		System.out.println(tree);
