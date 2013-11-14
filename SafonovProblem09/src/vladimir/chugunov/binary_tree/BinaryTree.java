@@ -1,14 +1,20 @@
 package vladimir.chugunov.binary_tree;
 
+import java.util.ArrayDeque;
 import java.util.ConcurrentModificationException;
 
 /**
  * Concurrency-nonsafe binary tree
- *
- * User: Alpen Ditrix Date: 14.11.13 Time: 11:22 */
+ * <p/>
+ * User: Alpen Ditrix Date: 14.11.13 Time: 11:22
+ */
 public class BinaryTree implements IBinaryTree {
 
     private int size = 0;
+    /** Chached depth value */
+    private int  depth;
+    /** Root of the node. There's no no node which has link on it */
+    private Node root;
 
     /**
      * Basic storage element of tree
@@ -27,8 +33,7 @@ public class BinaryTree implements IBinaryTree {
         }
 
         /**
-         * Adds a child to this node with {@link #value} {@code == v}. If there was another child it
-         * will be replaced
+         * Adds a child to this node with {@link #value} {@code == v}. If there was another child it will be replaced
          *
          * @param v value should of creating child
          */
@@ -40,9 +45,7 @@ public class BinaryTree implements IBinaryTree {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
+        /** {@inheritDoc} */
         public String toString() {
             return value == null ? "null" : value.toString();
         }
@@ -50,14 +53,12 @@ public class BinaryTree implements IBinaryTree {
         /**
          * Removes leaf node which is child of this node
          *
-         * @param node
-         *            which to remove
-         * @return value of removed node
-         * @throws IllegalStateException
-         *             if node intented to remove actually is not a leaf
-         * @throws IllegalArgumentException
-         *             if node intented to remove is not a child of this node
+         * @param node which to remove
          *
+         * @return value of removed node
+         *
+         * @throws IllegalStateException    if node intented to remove actually is not a leaf
+         * @throws IllegalArgumentException if node intented to remove is not a child of this node
          */
         Integer removeLeaf(Node node) {
             if (left != null && left.equals(node)) {
@@ -83,19 +84,30 @@ public class BinaryTree implements IBinaryTree {
         }
     }
 
-    /**
-     * Chached depth value
-     */
-    private int		depth;
+    public static final class Printer implements IVisitor {
 
-    /**
-     * Root of the node. There's no no node which has link on it
-     */
-    private Node	root;
+        @Override
+        public void visit(Integer i) {
+            System.out.println(i);
+        }
 
-    /**
-     * {@inheritDoc}
-     */
+    }
+
+    public static void main(String[] args) {
+        BinaryTree bt = new BinaryTree();
+        bt.add(4);
+        bt.add(2);
+        bt.add(6);
+        bt.add(1);
+        bt.add(3);
+        bt.add(5);
+        bt.add(7);
+        System.out.println(bt);
+        System.out.println();
+        bt.breadthFirstTraversal(new Printer());
+    }
+
+    /** {@inheritDoc} */
     @Override
     public void add(Integer value) {
         invalidateDepthCache();
@@ -107,17 +119,16 @@ public class BinaryTree implements IBinaryTree {
         size++;
     }
 
-    /**
-     * Content of tree changed, hence previosly computed value is not valid
-     */
+    /** Content of tree changed, hence previosly computed value is not valid */
     private void invalidateDepthCache() {
         depth = -1;
     }
 
     /**
      * @param value values which should be added
-     * @return {@link Node}, which may be parent of new {@link Node} with {@link Node#value}
-     *         {@code == value} (this param)
+     *
+     * @return {@link Node}, which may be parent of new {@link Node} with {@link Node#value} {@code == value} (this
+     *         param)
      */
     private Node getNodeToAdd(Integer value) {
         Node p1 = root;
@@ -133,9 +144,7 @@ public class BinaryTree implements IBinaryTree {
         return p2;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean contains(Integer value) {
         Node node = root;
@@ -149,9 +158,7 @@ public class BinaryTree implements IBinaryTree {
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean remove(Integer value) {
         Node parent = null;
@@ -178,8 +185,9 @@ public class BinaryTree implements IBinaryTree {
     /**
      * Some extraordinary magic
      *
-     * @param node current node of search
+     * @param node   current node of search
      * @param parent parent of {@code node}
+     *
      * @return removed value
      */
     private Integer removeNode(Node node, Node parent) {
@@ -215,9 +223,7 @@ public class BinaryTree implements IBinaryTree {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public int depth() {
         if (depth < 0) {
@@ -227,8 +233,8 @@ public class BinaryTree implements IBinaryTree {
     }
 
     /**
-     * @param n
-     *            root of current subtree
+     * @param n root of current subtree
+     *
      * @return depth of current subtree
      */
     public int getDepthFrom(Node n) {
@@ -241,23 +247,38 @@ public class BinaryTree implements IBinaryTree {
         return Math.max(l, r) + 1;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void depthFirstTraversal(IVisitor visitor) {
         visiting(root, visitor, 0);
     }
 
     @Override
-    public void widthFirstTraversal(IVisitor visitor) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void breadthFirstTraversal(IVisitor visitor) {
+        ArrayDeque<Node> rootQueue = new ArrayDeque<>();
+        rootQueue.add(root);
+        bfs(rootQueue, visitor); //do not store visited nodes cos it's tree
     }
 
-    /**
-     * Visits every node in this tree int the natural order (low value first, high value last) and
-     * acts on it.
-     */
+    private void bfs(ArrayDeque<Node> nodes, IVisitor visitor) {
+        ArrayDeque<Node> children = new ArrayDeque<>();
+        while (!nodes.isEmpty()) {
+            Node n = nodes.removeFirst();
+            visitor.visit(n.value);
+            if (n.left != null) {
+
+                children.add(n.left);
+            }
+            if (n.right != null) {
+                children.add(n.right);
+            }
+        }
+        if (!children.isEmpty()) {
+            bfs(children, visitor);
+        }
+    }
+
+    /** Visits every node in this tree int the natural order (low value first, high value last) and acts on it. */
     public void sortedVisiting(IVisitor visitor) {
         visiting(root, visitor, 1);
     }
@@ -265,30 +286,29 @@ public class BinaryTree implements IBinaryTree {
     /**
      * Visits every node in this tree (using DFS algorithm) and acts on it.
      *
-     * @param n root of current subtree
+     * @param n    root of current subtree
      * @param when when to execute {@link IVisitor}
      */
     private void visiting(Node n, IVisitor visitor, int when) {
         if (when == 0) {
-            visitor.visit(n);
+            visitor.visit(n.value);
         }
         if (n.left != null) {
             visiting(n.left, visitor, when);
         }
         if (when == 1) {
-            visitor.visit(n);
+            visitor.visit(n.value);
         }
         if (n.right != null) {
             visiting(n.right, visitor, when);
         }
         if (when == 2) {
-            visitor.visit(n);
+            visitor.visit(n.value);
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         depth();// cache depth value
@@ -299,10 +319,8 @@ public class BinaryTree implements IBinaryTree {
     /**
      * Creates string which represents subtree of node {@code n} as {@link String}
      *
-     * @param sb
-     *            where to append element
-     * @param n
-     *            root of current subtree
+     * @param sb        where to append element
+     * @param n         root of current subtree
      * @param currDepth current depth in tree
      */
     private void printer(StringBuilder sb, Node n, int currDepth) {
@@ -323,18 +341,6 @@ public class BinaryTree implements IBinaryTree {
         if (n.right != null) {
             printer(sb, n.right, currDepth + 1);
         }
-    }
-
-    public static void main(String[] args) {
-    }
-
-    public static final class Printer implements IVisitor {
-
-        @Override
-        public void visit(Object obj) {
-            System.out.println(obj);
-        }
-
     }
 
 }

@@ -15,12 +15,12 @@ public interface IBinaryTree {
 
     public static interface IVisitor {
 
-        public void visit(Object that);
+        public void visit(Integer that);
 
     }
 
     public void depthFirstTraversal(IVisitor visitor);
 
-    public void widthFirstTraversal(IVisitor visitor);
+    public void breadthFirstTraversal(IVisitor visitor);
 
 }
