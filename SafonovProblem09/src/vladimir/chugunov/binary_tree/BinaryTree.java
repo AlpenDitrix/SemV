@@ -93,20 +93,6 @@ public class BinaryTree implements IBinaryTree {
 
     }
 
-    public static void main(String[] args) {
-        BinaryTree bt = new BinaryTree();
-        bt.add(4);
-        bt.add(2);
-        bt.add(6);
-        bt.add(1);
-        bt.add(3);
-        bt.add(5);
-        bt.add(7);
-        System.out.println(bt);
-        System.out.println();
-        bt.breadthFirstTraversal(new Printer());
-    }
-
     /** {@inheritDoc} */
     @Override
     public void add(Integer value) {
