@@ -15,7 +15,7 @@ public class BoundedUnitTest {
 
     @Test
     public void negativeSize() {
-        exception.expect(NegativeArraySizeException.class);
+        exception.expect(Throwable.class);
         System.out.println();
         new BoundedStack<>(-1);
     }
@@ -41,6 +41,26 @@ public class BoundedUnitTest {
         } catch (Throwable throwable) {
             Assert.fail(String.format("Ошибка наполнения стека на %s-м элементе из %s", i, SIZE));
         }
+    }
+
+    @Test
+    public void overPush() {
+        pushSomeValues();
+        exception.expect(Throwable.class);
+        stack.push(0);
+    }
+
+    @Test
+    public void overPoll() {
+        peekAndPopTest();
+        exception.expect(Throwable.class);
+        stack.pop();
+    }
+
+    @Test
+    public void emptyPoll() {
+        exception.expect(Throwable.class);
+        new BoundedStack<>(SIZE).pop();
     }
 
     @Test
