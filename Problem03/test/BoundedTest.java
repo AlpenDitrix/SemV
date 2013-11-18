@@ -1,32 +1,28 @@
-package vladimir.chugunov.Stack.test;
-
-import vladimir.chugunov.Stack.ImmortalStack;
+import vladimir.chugunov.Stack.BoundedStack;
 
 /** User: Alpen Ditrix Date: 12.11.13 Time: 16:44 */
-public class ImmortalTest {
+public class BoundedTest {
 
     public static void main(String[] args) {
-        ImmortalStack<Integer> bs;
+        BoundedStack<Integer> bs;
         try {
-            bs = new ImmortalStack<>(-1);
+            bs = new BoundedStack<>(-1);
         } catch (NegativeArraySizeException e) {
             System.out.println("Не могу создать стек отрицательного размера");
         }
-        bs = new ImmortalStack<>();
+        bs = new BoundedStack<>(15);
         System.out.println(String.format("isEmpty() = %s", bs.isEmpty()));
 
         System.out.println("Пихаем");
-        for (int i = 0; i < 150; i++) {
+        for (int i = 0; i < bs.getBound(); i++) {
             bs.push(i * 2);
-            System.out
-                  .println(String.format("push(%s), size() = %s",
-                                         i * 2, bs.size()));
+            System.out.println(String.format("push(%s), size() = %s", i * 2, bs.size()));
         }
-//        try {
-//            bs.push(0);
-//        } catch (ArrayIndexOutOfBoundsException e) {
-//            System.out.println("Не могу пихнуть в заполненный BoundedStack");
-//        }
+        try {
+            bs.push(0);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Не могу пихнуть в заполненный BoundedStack");
+        }
         System.out.println(String.format("isEmpty() = %s", bs.isEmpty()));
 
 
@@ -47,20 +43,29 @@ public class ImmortalTest {
         System.out.println(String.format("size() = %s", bs.size()));
 
         System.out.println("\nПихаем");
-        for (int i = 0; i < 150; i++) {
+        for (int i = 0; i < bs.getBound(); i++) {
             bs.push(i * 2);
-            System.out
-                  .println(String.format("push(%s), size() = %s",
-                                         i * 2, bs.size()));
+            System.out.println(String.format("push(%s), size() = %s", i * 2, bs.size()));
         }
         System.out.println(String.format("isEmpty() = %s", bs.isEmpty()));
 
+        System.out
+              .println(String.format("\nИзменение размера на %s. Успех: %s",
+                                     bs.getBound() + 5, bs.checkAndSetNewCapacity(bs.getBound() + 5)));
+        bs.push(0);
+        System.out.println(String.format("push(%s), size() = %s", 0, bs.size()));
+        bs.push(0);
+        System.out.println(String.format("push(%s), size() = %s", 0, bs.size()));
+        bs.push(0);
+        System.out.println(String.format("push(%s), size() = %s", 0, bs.size()));
+        bs.push(0);
+        System.out.println(String.format("push(%s), size() = %s", 0, bs.size()));
+        bs.push(0);
+        System.out.println(String.format("push(%s), size() = %s", 0, bs.size()));
+
         System.out.println("\nДостаем");
-        for (int i = 0; i < 150; i++) {
-            System.out
-                  .println(String.format("size() = %s, peek() = %s, pop() = %s", bs.size(),
-                                         bs.peek(), bs
-                          .pop()));
+        for (int i = 0; i < bs.getBound(); i++) {
+            System.out.println(String.format("size() = %s, peek() = %s, pop() = %s", bs.size(), bs.peek(), bs.pop()));
         }
         System.out.println(String.format("isEmpty() = %s", bs.isEmpty()));
         try {
@@ -75,6 +80,5 @@ public class ImmortalTest {
         }
 
     }
-
 
 }

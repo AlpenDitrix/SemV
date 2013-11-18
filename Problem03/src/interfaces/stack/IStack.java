@@ -7,11 +7,13 @@ public interface IStack<E> {
      * Кладет новый элемент на вершину стека
      *
      * @param element что кладем
+     *
+     * @return ссылка на этот стек
      */
-    public void push(E element);
+    public IStack<E> push(E element);
 
     /**
-     * Убирает их стека верхний элемент
+     * Убирает из стека верхний элемент
      *
      * @return убранный элемент
      */

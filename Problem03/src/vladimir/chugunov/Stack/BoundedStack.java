@@ -21,8 +21,9 @@ public class BoundedStack<E> implements IStack<E> {
     }
 
     @Override
-    public void push(E element) throws ArrayIndexOutOfBoundsException {
+    public IStack<E> push(E element) throws ArrayIndexOutOfBoundsException {
         elementData[++elementCount] = element;
+        return this;
     }
 
     @Override

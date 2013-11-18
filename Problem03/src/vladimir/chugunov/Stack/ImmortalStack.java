@@ -71,9 +71,10 @@ public class ImmortalStack<E> implements IStack<E> {
     }
 
     @Override
-    public void push(E element) throws ArrayIndexOutOfBoundsException {
+    public IStack<E> push(E element) throws ArrayIndexOutOfBoundsException {
         tryGrow();
         elementData[++elementCount] = element;
+        return this;
     }
 
     @Override

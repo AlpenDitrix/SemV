@@ -39,9 +39,10 @@ public class LinkedStack<E> implements IStack<E> {
     }
 
     @Override
-    public void push(E element) {
+    public IStack<E> push(E element) {
         peak = new Node(element, peak);
         size++;
+        return this;
     }
 
     @Override

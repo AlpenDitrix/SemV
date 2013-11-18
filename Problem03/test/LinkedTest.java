@@ -1,5 +1,3 @@
-package vladimir.chugunov.Stack.test;
-
 import vladimir.chugunov.Stack.LinkedStack;
 
 /** User: Alpen Ditrix Date: 12.11.13 Time: 16:45 */
