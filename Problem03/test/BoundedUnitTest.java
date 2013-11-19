@@ -1,9 +1,8 @@
-package vladimir.chugunov.Stack;
-
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import vladimir.chugunov.Stack.BoundedStack;
 
 /** User: Alpen Ditrix Date: 18.11.13 Time: 18:07 */
 public class BoundedUnitTest {
@@ -44,26 +43,6 @@ public class BoundedUnitTest {
     }
 
     @Test
-    public void overPush() {
-        pushSomeValues();
-        exception.expect(Throwable.class);
-        stack.push(0);
-    }
-
-    @Test
-    public void overPoll() {
-        peekAndPopTest();
-        exception.expect(Throwable.class);
-        stack.pop();
-    }
-
-    @Test
-    public void emptyPoll() {
-        exception.expect(Throwable.class);
-        new BoundedStack<>(SIZE).pop();
-    }
-
-    @Test
     public void additionalIsEmptyTest() {
         pushSomeValues();
         Assert.assertFalse("После добаления элемента стек не должен являться пустым", stack.isEmpty());
@@ -85,7 +64,8 @@ public class BoundedUnitTest {
                 Assert.assertTrue("Метод pop() должен возвращать значение вершины стека", i * 2 == stack.pop());
             }
         } catch (Throwable throwable) {
-            Assert.fail("Ошибка при вытаскивании элементов из стека");
+
+            Assert.fail(String.format("Ошибка при вытаскивании из стека %s-го элемента из %s",i,SIZE));
         }
     }
 
@@ -115,5 +95,25 @@ public class BoundedUnitTest {
             stack.pop();
             Assert.assertEquals("Размер стека должен уменьшаться после вызовать pop()", size - 1, stack.size());
         }
+    }
+
+    @Test
+    public void overPush() {
+        pushSomeValues();
+        exception.expect(Throwable.class);
+        stack.push(0);
+    }
+
+    @Test
+    public void overPoll() {
+        peekAndPopTest();
+        exception.expect(Throwable.class);
+        stack.pop();
+    }
+
+    @Test
+    public void emptyPoll() {
+        exception.expect(Throwable.class);
+        new BoundedStack<>(SIZE).pop();
     }
 }
