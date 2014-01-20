@@ -8,7 +8,7 @@ import java.util.ConcurrentModificationException;
  * <p/>
  * User: Alpen Ditrix Date: 14.11.13 Time: 11:22
  */
-public class BinaryTree implements IBinaryTree {
+public class BinaryTreeInteger implements IBinaryTree {
 
     private int size = 0;
     /** Chached depth value */
